@@ -1,0 +1,53 @@
+# Visual Studio-related files
+.vs/
+.vscode/
+
+# Build artifacts
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and temporary files
+*.log
+*.tlog
+*.ide.log
+*.tmp
+*.temp
+*.cache
+*.pdb
+
+# Dependency directories
+packages/
+node_modules/
+
+# Configuration files
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json
+
+# Publish output
+publish/
+wwwroot/
+
+# Rider/JetBrains IDE files
+.idea/
+*.iml
+
+# Resharper files
+_ReSharper*/
+*.DotSettings.user
+
+# NuGet-related files
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Other
+*.DS_Store
+Thumbs.db
