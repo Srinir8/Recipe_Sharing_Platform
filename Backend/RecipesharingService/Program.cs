@@ -47,27 +47,20 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Register Firebase Admin SDK
-var firebaseCredentialsPath = builder.Configuration.GetValue<string>("Firebase:CredentialsPath");
-if (string.IsNullOrEmpty(firebaseCredentialsPath))
+var firebaseCredentialsBase64 = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS_BASE64");
+if (string.IsNullOrEmpty(firebaseCredentialsBase64))
 {
-    var firebaseCredentialsJson = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS");
-    if (string.IsNullOrEmpty(firebaseCredentialsJson))
-    {
-        throw new Exception("Firebase credentials are not set.");
-    }
+    throw new Exception("Firebase credentials are not set.");
+}
 
-    FirebaseApp.Create(new AppOptions
-    {
-        Credential = GoogleCredential.FromJson(firebaseCredentialsJson)
-    });
-}
-else
+// Decode the Base64 string to get the JSON
+var firebaseCredentialsJson = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(firebaseCredentialsBase64));
+
+// Initialize Firebase Admin SDK
+FirebaseApp.Create(new AppOptions
 {
-    FirebaseApp.Create(new AppOptions
-    {
-        Credential = GoogleCredential.FromFile(firebaseCredentialsPath)
-    });
-}
+    Credential = GoogleCredential.FromJson(firebaseCredentialsJson)
+});
 
 // Register MediatR
 builder.Services.AddMediatR(typeof(Program).Assembly);
