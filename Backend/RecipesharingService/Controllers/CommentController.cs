@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RecipesharingService.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RecipesharingService.Services;
 
 namespace RecipesharingService.Controllers
@@ -23,6 +23,7 @@ namespace RecipesharingService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddComment([FromBody] Comment comment)
         {
             await _service.AddCommentAsync(comment);
@@ -30,6 +31,7 @@ namespace RecipesharingService.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment(Guid id)
         {
             await _service.DeleteCommentAsync(id);

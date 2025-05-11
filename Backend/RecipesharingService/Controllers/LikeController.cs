@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RecipesharingService.Models;
 using RecipesharingService.Services;
 
@@ -23,6 +24,7 @@ namespace RecipesharingService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddLike([FromBody] Like like)
         {
             await _service.AddLikeAsync(like);
@@ -30,6 +32,7 @@ namespace RecipesharingService.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteLike(Guid id)
         {
             await _service.DeleteLikeAsync(id);

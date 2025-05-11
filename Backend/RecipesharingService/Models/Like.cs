@@ -5,15 +5,15 @@ namespace RecipesharingService.Models
 {
     public class Like
     {
-        [BsonId] // Maps this property to MongoDB's _id field
-        [BsonRepresentation(BsonType.String)] // Ensures the _id is stored as a string (Guid)
-        public Guid Id { get; set; } = Guid.NewGuid(); // Unique like ID
+        [BsonId]
+        [BsonRepresentation(BsonType.String)] 
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        [BsonRepresentation(BsonType.String)] // Ensures RecipeId is stored as a string
-        public Guid RecipeId { get; set; } // ID of the liked recipe
+        [BsonRepresentation(BsonType.String)] 
+        public Guid RecipeId { get; set; } 
 
-        [BsonRepresentation(BsonType.String)] // Ensures UserId is stored as a string
-        public Guid UserId { get; set; } // ID of the user who liked the recipe
+        [BsonRepresentation(BsonType.String)] 
+        public Guid UserId { get; set; } 
 
         public DateTime LikedAt { get; set; } = DateTime.UtcNow;
     }

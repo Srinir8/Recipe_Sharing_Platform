@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RecipesharingService.Models;
 using RecipesharingService.Services;
+using System.Security.Claims;
 
 namespace RecipesharingService.Controllers
 {
@@ -15,35 +16,35 @@ namespace RecipesharingService.Controllers
             _service = service;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(Guid id)
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var user = await _service.GetUserByIdAsync(id);
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (firebaseUserId == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            var user = await _service.GetUserByGoogleIdAsync(firebaseUserId);
             if (user == null)
             {
-                return NotFound();
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var name = User.FindFirst("name")?.Value;
+                var picture = User.FindFirst("picture")?.Value;
+
+                user = new User
+                {
+                    GoogleId = firebaseUserId,
+                    Email = email ?? string.Empty,
+                    Name = name,
+                    ProfilePictureUrl = picture,
+                    Role = "User"
+                };
+
+                await _service.AddUserAsync(user);
             }
+
             return Ok(user);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] User user)
-        {
-            await _service.AddUserAsync(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User user)
-        {
-            if (id != user.Id)
-            {
-                return BadRequest("User ID mismatch.");
-            }
-
-            await _service.UpdateUserAsync(user);
-            return NoContent();
-        }
     }
-
 }
