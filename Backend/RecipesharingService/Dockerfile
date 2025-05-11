@@ -31,7 +31,7 @@ COPY --from=publish /app/publish .
 
 # Ensure the application user has access to the secrets directory if it exists
 USER root
-RUN [ -d /etc/secrets ] && chmod -R 755 /etc/secrets || echo "/etc/secrets does not exist"
+RUN mkdir -p /etc/secrets && chmod -R 755 /etc/secrets
 USER $APP_UID
 
 ENTRYPOINT ["dotnet", "RecipesharingService.dll"]
