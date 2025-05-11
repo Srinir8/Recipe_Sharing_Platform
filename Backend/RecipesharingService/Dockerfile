@@ -31,7 +31,7 @@ COPY --from=publish /app/publish .
 
 # Ensure the application user has access to the secrets directory if it exists
 USER root
-RUN mkdir -p /etc/secrets && chmod -R 755 /etc/secrets
+RUN chmod 644 /etc/secrets/recipesharingplatrform-firebase-adminsdk-fbsvc-1d4b3da776.json
 USER $APP_UID
 
 ENTRYPOINT ["dotnet", "RecipesharingService.dll"]
