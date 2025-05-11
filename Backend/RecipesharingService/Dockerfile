@@ -7,7 +7,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -26,5 +25,13 @@ RUN dotnet publish "./RecipesharingService.csproj" -c $BUILD_CONFIGURATION -o /a
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
+
+# Copy the published application
 COPY --from=publish /app/publish .
+
+# Ensure the application user has access to the secrets directory if it exists
+USER root
+RUN [ -d /etc/secrets ] && chmod -R 755 /etc/secrets || echo "/etc/secrets does not exist"
+USER $APP_UID
+
 ENTRYPOINT ["dotnet", "RecipesharingService.dll"]
