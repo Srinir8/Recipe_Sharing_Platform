@@ -47,11 +47,27 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Register Firebase Admin SDK
-var firebaseConfig = builder.Configuration.GetSection("Firebase:CredentialsPath").Value;
-FirebaseApp.Create(new AppOptions
+var firebaseCredentialsPath = builder.Configuration.GetValue<string>("Firebase:CredentialsPath");
+if (string.IsNullOrEmpty(firebaseCredentialsPath))
 {
-    Credential = GoogleCredential.FromFile(firebaseConfig)
-});
+    var firebaseCredentialsJson = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS");
+    if (string.IsNullOrEmpty(firebaseCredentialsJson))
+    {
+        throw new Exception("Firebase credentials are not set.");
+    }
+
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromJson(firebaseCredentialsJson)
+    });
+}
+else
+{
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromFile(firebaseCredentialsPath)
+    });
+}
 
 // Register MediatR
 builder.Services.AddMediatR(typeof(Program).Assembly);

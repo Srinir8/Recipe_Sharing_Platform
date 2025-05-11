@@ -29,9 +29,5 @@ WORKDIR /app
 # Copy the published application
 COPY --from=publish /app/publish .
 
-# Ensure the application user has access to the secrets directory if it exists
-USER root
-RUN chmod 644 /etc/secrets/recipesharingplatrform-firebase-adminsdk-fbsvc-1d4b3da776.json
-USER $APP_UID
-
+# Set the entry point for the application
 ENTRYPOINT ["dotnet", "RecipesharingService.dll"]
