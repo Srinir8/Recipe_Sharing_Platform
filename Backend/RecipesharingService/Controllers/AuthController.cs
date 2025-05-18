@@ -18,8 +18,8 @@ namespace RecipesharingService.Controllers
         [HttpGet("google")]
         public IActionResult GoogleLogin()
         {
-            var clientId = _configuration["Authentication:Google:ClientId"];
-            var redirectUri = _configuration["Authentication:Google:RedirectUri"];
+            var clientId = _configuration["Google:ClientId"];
+            var redirectUri = _configuration["Google:RedirectUri"];
             var scope = "openid email profile";
             var state = Guid.NewGuid().ToString();
 
@@ -34,9 +34,9 @@ namespace RecipesharingService.Controllers
         [HttpGet("google/callback")]
         public async Task<IActionResult> GoogleCallback([FromQuery] string code, [FromQuery] string state)
         {
-            var clientId = _configuration["Authentication:Google:ClientId"];
-            var clientSecret = _configuration["Authentication:Google:ClientSecret"];
-            var redirectUri = _configuration["Authentication:Google:RedirectUri"];
+            var clientId = _configuration["Google:ClientId"];
+            var clientSecret = _configuration["Google:ClientSecret"];
+            var redirectUri = _configuration["Google:RedirectUri"];
 
             using var httpClient = new HttpClient();
 
@@ -64,7 +64,7 @@ namespace RecipesharingService.Controllers
             var firebaseIdToken = await ExchangeGoogleOAuthTokenForFirebaseIdToken(googleAccessToken);
 
             // Redirect back to the Angular front end with the token.
-            var frontendUrl = _configuration["Authentication:Frontend:RedirectUri"] ?? "http://localhost:4200/login";
+            var frontendUrl = _configuration["Frontend:RedirectUri"] ?? "http://localhost:4200/login";
             return Redirect($"{frontendUrl}?token={firebaseIdToken}");
         }
 
@@ -97,7 +97,7 @@ namespace RecipesharingService.Controllers
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             // Retrieve the Firebase API key directly from configuration.
-            var firebaseApiKey = _configuration["Authentication:Firebase:ApiKey"];
+            var firebaseApiKey = _configuration["Firebase:ApiKey"];
             var firebaseExchangeUrl = $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key={firebaseApiKey}";
 
             var response = await httpClient.PostAsync(firebaseExchangeUrl, content);
