@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RecipesharingService.Models;
 using RecipesharingService.Services;
 using System.Security.Claims;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 namespace RecipesharingService.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {

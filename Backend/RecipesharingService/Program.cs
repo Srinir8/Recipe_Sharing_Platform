@@ -11,6 +11,19 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200") // Change this to your frontend's URL/port if needed
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -48,19 +61,29 @@ builder.Services.AddSwaggerGen(options =>
 
 // Register Firebase Admin SDK
 var firebaseCredentialsBase64 = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS_BASE64");
-if (string.IsNullOrEmpty(firebaseCredentialsBase64))
+var firebaseCredentialsPath = builder.Configuration.GetValue<string>("Firebase:CredentialsPath");
+
+if (!string.IsNullOrEmpty(firebaseCredentialsPath) && File.Exists(firebaseCredentialsPath))
+{
+    // Use the local JSON file for development
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromFile(firebaseCredentialsPath)
+    });
+}
+else if (!string.IsNullOrEmpty(firebaseCredentialsBase64))
+{
+    // Decode the Base64 string to get the JSON for production
+    var firebaseCredentialsJson = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(firebaseCredentialsBase64));
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromJson(firebaseCredentialsJson)
+    });
+}
+else
 {
     throw new Exception("Firebase credentials are not set.");
 }
-
-// Decode the Base64 string to get the JSON
-var firebaseCredentialsJson = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(firebaseCredentialsBase64));
-
-// Initialize Firebase Admin SDK
-FirebaseApp.Create(new AppOptions
-{
-    Credential = GoogleCredential.FromJson(firebaseCredentialsJson)
-});
 
 // Register MediatR
 builder.Services.AddMediatR(typeof(Program).Assembly);
@@ -78,7 +101,9 @@ builder.Services.AddSingleton<UserService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// Use CORS policy
+app.UseCors("AllowFrontend");
+
 if (app.Environment.IsDevelopment())
 {
     // Load Google OAuth2 credentials from JSON file

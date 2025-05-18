@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RecipesharingService.Models;
 using RecipesharingService.Services;
 
 namespace RecipesharingService.Controllers
@@ -24,8 +25,14 @@ namespace RecipesharingService.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddComment([FromBody] Comment comment)
+        public async Task<IActionResult> AddComment([FromBody] CommentInputModel input)
         {
+            var comment = new Comment
+            {
+                RecipeId = input.RecipeId,
+                UserId = input.UserId,
+                Content = input.Content,
+            };
             await _service.AddCommentAsync(comment);
             return CreatedAtAction(nameof(GetComments), new { recipeId = comment.RecipeId }, comment);
         }

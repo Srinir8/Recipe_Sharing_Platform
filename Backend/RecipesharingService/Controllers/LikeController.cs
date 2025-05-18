@@ -25,8 +25,13 @@ namespace RecipesharingService.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddLike([FromBody] Like like)
+        public async Task<IActionResult> AddLike([FromBody] LikeInputModel input)
         {
+            var like = new Like
+            {
+                RecipeId = input.RecipeId,
+                UserId = input.UserId,
+            };
             await _service.AddLikeAsync(like);
             return CreatedAtAction(nameof(GetLikes), new { recipeId = like.RecipeId }, like);
         }
@@ -39,5 +44,4 @@ namespace RecipesharingService.Controllers
             return NoContent();
         }
     }
-
 }
