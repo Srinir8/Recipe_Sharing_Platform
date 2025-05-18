@@ -1,0 +1,80 @@
+<div class="container" style="padding:16px; font-family: 'Roboto', sans-serif; text-align: left;">
+  <!-- Button to open add recipe form -->
+  <div style="margin-bottom:16px; text-align:right;">
+    <button mat-raised-button color="accent" (click)="toggleAddRecipe()">
+      Add Your Own Recipe
+    </button>
+  </div>
+
+  <!-- Add Recipe Form -->
+  <div *ngIf="showAddRecipeUI" style="margin-bottom:24px;">
+    <mat-card>
+      <mat-card-title style="font-family: inherit;">Add a New Recipe</mat-card-title>
+      <mat-card-content>
+        <form (ngSubmit)="addRecipe()" class="recipe-form">
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Title</mat-label>
+            <input matInput name="title" [(ngModel)]="newRecipe.title" required style="font-family: inherit;"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Description</mat-label>
+            <textarea matInput name="description" [(ngModel)]="newRecipe.description" style="font-family: inherit;"></textarea>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Ingredients (comma separated)</mat-label>
+            <input matInput name="ingredients" [(ngModel)]="ingredientsInput" style="font-family: inherit;"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>Instructions (comma separated)</mat-label>
+            <input matInput name="instructions" [(ngModel)]="instructionsInput" style="font-family: inherit;"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="width:100%">
+            <mat-label>User ID</mat-label>
+            <input matInput name="userId" [value]="newRecipe.userId" readonly required style="font-family: inherit;"/>
+          </mat-form-field>
+          <div style="margin:8px 0;">
+            <input type="file" (change)="onFileSelected($event)" style="font-family: inherit;"/>
+          </div>
+          <button mat-raised-button color="primary" type="submit" style="font-family: inherit;">Submit Recipe</button>
+          <button mat-button color="warn" type="button" (click)="showAddRecipeUI = false" style="font-family: inherit;">Cancel</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Recipes Listing -->
+  <div *ngIf="!showAddRecipeUI">
+    <h2 style="font-family: inherit;">Recipes</h2>
+    <div *ngFor="let recipe of recipes" style="margin-bottom:16px;">
+      <mat-card>
+        <mat-card-title style="font-family: inherit;">{{ recipe.title }}</mat-card-title>
+        <!-- Recipe image moved below title with fixed size -->
+        <div *ngIf="recipe.picture" style="text-align:center; margin-bottom:8px;">
+          <img [src]="recipe.picture.startsWith('data:') ? recipe.picture : 'data:image/png;base64,' + recipe.picture" 
+               alt="Recipe Image" 
+               style="width:200px; height:150px; object-fit:cover;"/>
+        </div>
+        <mat-card-content style="font-family: inherit;">
+          <p><strong>Description:</strong> {{ recipe.description }}</p>
+          <p><strong>Ingredients:</strong> {{ recipe.ingredients.join(', ') }}</p>
+          <p>
+            <strong>Instructions:</strong> 
+            {{ recipe.instructions.join(', ') }}
+          </p>
+          <ul style="padding-left:20px; margin:0;">
+            <li *ngFor="let comment of recipe.comments" style="font-family: inherit;">
+               {{ ($any(comment).content | slice:0:70) + (($any(comment).content.length > 70) ? '...' : '') }}
+            </li>
+          </ul>
+        </mat-card-content>
+        <mat-card-actions style="font-family: inherit;">
+          <!-- Arranged in a column so that each element appears on its own line -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <app-like [recipeId]="recipe.id" [disabled]="isRecipeLiked(recipe)"></app-like>
+            <app-comment [recipeId]="recipe.id"></app-comment>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

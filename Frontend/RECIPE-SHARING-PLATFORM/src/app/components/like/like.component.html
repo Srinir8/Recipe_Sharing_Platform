@@ -1,0 +1,5 @@
+<button mat-button (click)="toggleLike()" style="font-family: 'Roboto', sans-serif;">
+  <mat-icon color="warn">{{ isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+  {{ isLiked ? 'Liked' : 'Like' }}
+</button>
+<span style="font-family: 'Roboto', sans-serif;">{{ likesCount }} Likes</span>

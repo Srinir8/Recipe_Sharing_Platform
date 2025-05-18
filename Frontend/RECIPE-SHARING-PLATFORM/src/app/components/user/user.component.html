@@ -1,0 +1,16 @@
+<div *ngIf="currentUser; else notLoggedIn" class="user-profile" style="margin:16px; font-family: 'Roboto', sans-serif;">
+  <mat-card>
+    <mat-card-title>Welcome, {{ currentUser.name }}</mat-card-title>
+    <mat-card-content>
+      <p>Email: {{ currentUser.email }}</p>
+      <p>Role: {{ currentUser.role }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #notLoggedIn>
+  <div style="margin:16px; text-align:center; font-family: 'Roboto', sans-serif;">
+    <p>Please login to view your profile.</p>
+    <button mat-raised-button color="primary" (click)="login()">Login</button>
+  </div>
+</ng-template>

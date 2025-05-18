@@ -1,0 +1,12 @@
+<mat-toolbar color="primary">
+  <span style="font-size:20px;">Recipe Sharing App</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/recipes">Recipes</a>
+  <a mat-button routerLink="/users">Profile</a>
+  <a *ngIf="!isLoggedIn" mat-button routerLink="/login">Login</a>
+  <a *ngIf="isLoggedIn" mat-button (click)="logout()">Logout</a>
+</mat-toolbar>
+<router-outlet></router-outlet>
+<style>
+  .spacer { flex: 1 1 auto; }
+</style>

@@ -1,0 +1,20 @@
+.like-button {
+    background-color: #ff4081; /* Pink background for the like button */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.like-button:hover {
+    background-color: #e91e63; /* Darker pink on hover */
+}
+
+.like-count {
+    font-size: 14px; /* Font size for like count */
+    color: #333; /* Dark gray color for text */
+    margin-left: 10px; /* Space between button and count */
+}

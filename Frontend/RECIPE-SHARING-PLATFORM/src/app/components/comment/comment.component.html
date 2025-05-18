@@ -1,0 +1,11 @@
+<div class="comment-section" style="margin-top:16px; font-family: 'Roboto', sans-serif;">
+  <h3 style="margin-bottom:8px;">Comments</h3>
+  <div *ngFor="let comment of comments; let i = index" style="margin-bottom:8px; border-bottom:1px solid #e0e0e0; padding-bottom:4px;">
+    <p style="margin:0;">{{ comment.content }}</p>
+  </div>
+  <mat-form-field appearance="outline" style="width: 100%; margin-top:8px;">
+    <mat-label>Add a comment</mat-label>
+    <textarea matInput [(ngModel)]="newComment" style="font-family: 'Roboto', sans-serif;"></textarea>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="addComment()" style="margin-top:8px; font-family: 'Roboto', sans-serif;">Submit</button>
+</div>
