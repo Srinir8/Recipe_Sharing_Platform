@@ -17,7 +17,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200") // Change this to your frontend's URL/port if needed
+            .WithOrigins(
+                "http://localhost:4200",
+                "https://recipe-sharing-platform-ui.onrender.com"
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
